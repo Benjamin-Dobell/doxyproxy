@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  ClusterName:
+    Type: String
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+Resources:
+  Task:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      NetworkMode: host
+      Volumes:
+        - Name: docker_sock
+          Host: 
+            SourcePath: /var/run/docker.sock
+      ContainerDefinitions:
+        - Name: doxyproxy
+          Image: glassechidna/doxyproxy
+          MemoryReservation: 512
+          MountPoints:
+            - SourceVolume: docker_sock
+              ContainerPath: /var/run/docker.sock
+          PortMappings:
+            - ContainerPort: 8080
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref Task
+      DesiredCount: 1
+      Cluster: !Ref ClusterName

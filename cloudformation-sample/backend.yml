@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  ClusterName:
+    Type: String
+  Domain:
+    Type: String
+    Default: example.com
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+Resources:
+  Task:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Volumes: []
+      ContainerDefinitions:
+        - Name: backend
+          Image: nginx
+          MemoryReservation: 512
+          DockerLabels:
+            com.glassechidna.doxyproxy.HttpHost: !Ref Domain
+            com.glassechidna.doxyproxy.HttpPort: 80
+          PortMappings:
+            - ContainerPort: 80
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref Task
+      DesiredCount: 1
+      Cluster: !Ref ClusterName

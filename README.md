@@ -26,7 +26,7 @@ docker run -d \
   --label com.glassechidna.doxyproxy.HttpPort=80 \
   nginx
 
-docker run -d --net=host -p 8080:8080 glassechidna/doxyproxy
+docker run -d --net=host -v /var/run/docker.sock:/var/run/docker.sock -p 8080:8080 glassechidna/doxyproxy
 curl -H 'Host: example.com' http://localhost:8080/ # forwarded to the first container
 curl -H 'Host: example2.com' http://localhost:8080/ # forwarded to the second container
 ```
