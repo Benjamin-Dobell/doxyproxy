@@ -5,7 +5,7 @@ local container_url = ngx.var.container_url
 local host = ngx.var.host
 
 -- Check if key exists in local cache
-local cache = ngx.shared.ceryx
+local cache = ngx.shared.doxyproxy
 local res, flags = cache:get(host)
 if res then
     ngx.var.container_url = res
